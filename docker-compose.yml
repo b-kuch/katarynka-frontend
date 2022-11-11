@@ -1,0 +1,7 @@
+services:
+  katarynka-front:
+    container_name: katarynka-front
+    build: .
+    ports:
+      - "5173:5173"
+    

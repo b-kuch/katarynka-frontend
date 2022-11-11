@@ -18,7 +18,7 @@ var isPlaying = false;
 var playButtonLabel = ref('Play');
 
 sound = new Howl({
-    src: ["http://localhost:8000/audio/Here Comes A Big Black Cloud!! - Graverobbin.mp3"],
+    src: ["http://localhost/stream/Here Comes A Big Black Cloud!! - Graverobbin.mp3"],
     html5: true
 });
 function playSong() {
