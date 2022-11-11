@@ -1,11 +1,11 @@
-FROM node:16.18.0
+FROM node:latest as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY . .
-
+COPY ./ .
 RUN npm run build
 
-EXPOSE 5173
-
-CMD [ "npm", "run", "dev", "--","--host" ]
+FROM nginx:latest as production-stage
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app
+COPY nginx.conf /etc/nginx/nginx.conf
