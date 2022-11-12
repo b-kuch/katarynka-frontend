@@ -11,4 +11,15 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  server: {
+    host: '0.0.0.0',
+    hmr: {
+      clientPort: 8080,
+      port: 8080,
+      path: '/__vite_hmr'
+    },
+    watch: {
+      usePolling: true,
+    },
+  }
 });
