@@ -1,9 +1,9 @@
 <template>
     <div>
         <button id="shuffle-songs">shuffle</button>
-        <button id="prev-song">prev</button>
-        <button id="play-pause-song" v-on:click="playButtonAction">{{ playButtonLabel }}</button>
-        <button id="next-song" v-on:click="nextSong">next</button>
+        <button id="prev-song" @click="prevSong">prev</button>
+        <button id="play-pause-song" @click="playButtonAction">{{ playButtonLabel }}</button>
+        <button id="next-song" @click="nextSong">next</button>
         <button id="loop-song">loop</button>
     </div>
 </template>
@@ -11,7 +11,9 @@
   
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
+
+Howler.volume(0.1);
 
 var sound: Howl;
 var isPlaying = false;
@@ -27,19 +29,21 @@ var sounds = songs.map((song) => new Howl({
 }));
 var index = 0;
 
+function currentSound(): Howl {
+    return sounds[index];
+}
+
 function playButtonAction() {
     isPlaying = !isPlaying;
     playButtonLabel.value = isPlaying ? "Pause" : "Play";
     playSong();
 }
 function playSong() {
-    isPlaying ? sounds[index].play() : sounds[index].pause();
+    isPlaying ? currentSound().play() : currentSound().pause();
 }
 
 function nextSong() {
-    sounds[index].pause();
-    sounds[index].seek(0);
-    isPlaying = false;
+    rewindCurrent();
     index++;
     if (index >= songs.length || index <= 0) {
         index = 0;
@@ -47,4 +51,17 @@ function nextSong() {
     playButtonAction();
 }
 
+function rewindCurrent() {
+    currentSound().pause();
+    currentSound().seek(0);
+    isPlaying = false;
+}
+function prevSong() {
+    rewindCurrent();
+    index--;
+    if (index >= songs.length || index <= 0) {
+        index = 0;
+    }
+    playButtonAction();
+}
 </script>
