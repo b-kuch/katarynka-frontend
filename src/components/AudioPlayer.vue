@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <button id="shuffle-songs">shuffle</button>
-        <button id="prev-song" @click="prevSong">prev</button>
-        <button id="play-pause-song" @click="playButtonAction">{{ playButtonLabel }}</button>
-        <button id="next-song" @click="nextSong">next</button>
-        <button id="loop-song">loop</button>
+    <div id="controls">
+        <button class="playerBtn fa fa-random" id="shuffle-songs"/>
+        <button class="playerBtn fa fa-arrow-left" id="prev-song" @click="prevSong"/>
+        <button class="playerBtn fa fa-play" id="play-pause-song" @click="playButtonAction"/>
+        <button class="playerBtn fa fa-arrow-right" id="next-song" @click="nextSong"/>
+        <button class="playerBtn fa fa-circle" id="loop-song"/>
     </div>
 </template>
 
@@ -65,3 +65,22 @@ function prevSong() {
     playButtonAction();
 }
 </script>
+
+<style>
+.playerBtn {
+  background: none;
+  border: none;
+  color: darkgreen;
+  width: 4em;
+}
+
+.playerBtn:hover {
+  color: green;
+}
+
+#controls{
+  width:100%;
+  height: 8%;
+  background-color: #222222;
+}
+</style>
