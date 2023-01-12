@@ -19,12 +19,14 @@ var sound: Howl;
 var isPlaying = false;
 var playButtonLabel = ref('Play');
 
+let song_storage = new URL("stream/", "http://localhost/")
 var songs = [
-    "http://localhost/stream/Here Comes A Big Black Cloud!! - Graverobbin.mp3",
-    "http://localhost/stream/Jazz at Mladost Club - Arana.mp3"
+    new URL("Here Comes A Big Black Cloud!! - Graverobbin.mp3", song_storage),
+    new URL("Jazz at Mladost Club - Arana.mp3", song_storage)
+
 ]
 var sounds = songs.map((song) => new Howl({
-    src: song,
+    src: song.toString(),
     html5: true
 }));
 var index = 0;
