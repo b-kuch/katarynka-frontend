@@ -7,8 +7,11 @@
     <button class="playerBtn fa fa-circle" id="loop-song"/>
   </div>
   <Song
-      v-for="song in songs"
+      v-for="(song, idx) in songs"
       :key="song.identifier"
+      :song="song"
+      :index="idx"
+      :currentIndex="index"
   />
 </template>
 
@@ -17,11 +20,11 @@
 import {ref} from 'vue';
 import {Howl, Howler} from 'howler';
 import {SongData} from "@/components/SongData";
-
+import Song from "@/components/Song.vue";
 let isPlaying = false;
 let playButtonLabel = ref('Play');
 let sounds: Howl[];
-let index = 0;
+let index = ref(0);
 
 let songs = ref<SongData[]>();
 
@@ -43,11 +46,11 @@ function doshit(songList: SongData[]) {
   // console.log(songs);
   sounds = songList.map(song => song.howl());
   songs.value = songList;
-  index = 0;
+  index.value = 0;
 }
 
 function currentSound(): Howl {
-  return sounds[index];
+  return sounds[index.value];
 }
 
 function playButtonAction() {
@@ -62,9 +65,9 @@ function playSong() {
 
 function nextSong() {
   rewindCurrent();
-  index++;
-  if (index >= songs.value.length || index <= 0) {
-    index = 0;
+  index.value++;
+  if (index.value >= songs.value.length || index.value <= 0) {
+    index.value = 0;
   }
   playButtonAction();
 }
@@ -77,9 +80,9 @@ function rewindCurrent() {
 
 function prevSong() {
   rewindCurrent();
-  index--;
-  if (index >= songs.value.length || index <= 0) {
-    index = 0;
+  index.value--;
+  if (index.value >= songs.value.length || index.value <= 0) {
+    index.value = 0;
   }
   playButtonAction();
 }
