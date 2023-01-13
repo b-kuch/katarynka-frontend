@@ -6,26 +6,30 @@
         <button class="playerBtn fa fa-arrow-right" id="next-song" @click="nextSong"/>
         <button class="playerBtn fa fa-circle" id="loop-song"/>
     </div>
+  <SongList/>
 </template>
 
   
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Howl, Howler } from 'howler';
+import SongList from "@/components/SongList.vue";
 
 Howler.volume(0.1);
 
 var sound: Howl;
 var isPlaying = false;
 var playButtonLabel = ref('Play');
+let song_storage = new URL("", "http://localhost/stream")
 
-let song_storage = new URL("stream/", "http://localhost/")
-var songs = [
-    new URL("Here Comes A Big Black Cloud!! - Graverobbin.mp3", song_storage),
-    new URL("Jazz at Mladost Club - Arana.mp3", song_storage)
+// songs = songs.songs
+// let songs_URLs = songs.map((song) => song_storage + "/" + song.filename)
+let songs_URLs = [
+    song_storage + "/Here Comes A Big Black Cloud!! - Graverobbin.mp3",
+    song_storage + "/Jazz at Mladost Club - Arana.mp3"
 
 ]
-var sounds = songs.map((song) => new Howl({
+var sounds = songs_URLs.map((song) => new Howl({
     src: song.toString(),
     html5: true
 }));
