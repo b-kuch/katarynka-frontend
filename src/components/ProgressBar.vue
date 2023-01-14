@@ -1,7 +1,7 @@
 <template>
  <div>
-    <div class="progress-bar">
-      <div class="progress" ref="progress" @click="seek" :style="{'width' : progress * 100 + '%'}"></div>
+    <div class="progress-bar" @click="seek">
+      <div class="progress" ref="progress"  :style="{'width' : progress * 100 + '%'}"></div>
     </div>
   </div>
 

@@ -1,6 +1,5 @@
 <template>
   <PlayerControls
-      :song="currentSound"
       @togglePlayPauseButton="playButtonAction"
       @previousButton="prevSong"
       @nextButton="nextSong"

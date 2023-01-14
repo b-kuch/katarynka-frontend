@@ -8,14 +8,20 @@ export class SongData {
     artist: Object
     album: Object
     filename: string
+    identifier: string
 
     constructor(json: {
-        song_name: string, artist: Object, album: Object, filename: string
+        identifier: string,
+        song_name: string,
+        artist: Object,
+        album: Object,
+        filename: string
     }) {
         this.song_name = json.song_name;
         this.artist = json.artist;
         this.album = json.album
         this.filename = json.filename;
+        this.identifier = json.identifier;
     }
 
     get URL(): string {
@@ -25,7 +31,9 @@ export class SongData {
     howl(): Howl {
         return new Howl({
             src: this.URL.toString(),
-            html5: true
+            html5: true,
+            preload: "metadata",
+
         })
     }
 }
