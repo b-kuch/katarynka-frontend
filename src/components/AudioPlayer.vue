@@ -6,7 +6,9 @@
       @nextButton="nextSong"
       @shuffleButton="shuffleSongs"
       @loopButton="loopSong"/>
-  <ProgressBar :song="currentSound"/>
+  <div v-if="soundsAvailable()">
+    <ProgressBar :currentSound="currentSound()"/>
+  </div>
   <Song
       v-for="(song, idx) in songs"
       :key="song.identifier"
@@ -28,10 +30,10 @@ import ProgressBar from "@/components/ProgressBar.vue";
 
 let isPlaying = false;
 let playButtonLabel = ref('Play');
-let sounds: Howl[];
+let sounds = ref<Howl[]>([]);
 let index = ref(0);
 
-let songs = ref<SongData[]>();
+let songs = ref<SongData[]>([]);
 
 let song_details = new URL("", "http://localhost/songs")
 let trending_url = song_details + "/trending"
@@ -44,18 +46,18 @@ fetch(trending_url)
     .then(response => response.json())
     .then(data => data.songs)
     .then(data => data.map((json: { song_name: string; artist: Object; album: Object; filename: string; }) => new SongData(json)))
-    .then(data => doshit(data))
+    .then(data => doStuff(data))
     .catch((e) => console.log(e))
 
-function doshit(songList: SongData[]) {
+function doStuff(songList: SongData[]) {
   // console.log(songs);
-  sounds = songList.map(song => song.howl());
+  sounds.value = songList.map(song => song.howl());
   songs.value = songList;
   index.value = 0;
 }
 
 function currentSound(): Howl {
-  return sounds[index.value];
+  return sounds.value[index.value];
 }
 
 function playButtonAction() {
@@ -94,7 +96,12 @@ function prevSong() {
 
 function shuffleSongs() {
 }
+
 function loopSong() {
+}
+
+function soundsAvailable() {
+  return sounds.value.length != 0;
 }
 </script>
 
