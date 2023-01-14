@@ -1,11 +1,12 @@
 <template>
-  <div id="controls">
-    <button class="playerBtn fa fa-random" id="shuffle-songs"/>
-    <button class="playerBtn fa fa-arrow-left" id="prev-song" @click="prevSong"/>
-    <button class="playerBtn fa fa-play" id="play-pause-song" @click="playButtonAction"/>
-    <button class="playerBtn fa fa-arrow-right" id="next-song" @click="nextSong"/>
-    <button class="playerBtn fa fa-circle" id="loop-song"/>
-  </div>
+  <PlayerControls
+      :song="currentSound"
+      @togglePlayPauseButton="playButtonAction"
+      @previousButton="prevSong"
+      @nextButton="nextSong"
+      @shuffleButton="shuffleSongs"
+      @loopButton="loopSong"/>
+  <ProgressBar :song="currentSound"/>
   <Song
       v-for="(song, idx) in songs"
       :key="song.identifier"
@@ -13,6 +14,7 @@
       :index="idx"
       :currentIndex="index"
   />
+
 </template>
 
 
@@ -21,6 +23,9 @@ import {ref} from 'vue';
 import {Howl, Howler} from 'howler';
 import {SongData} from "@/components/SongData";
 import Song from "@/components/Song.vue";
+import PlayerControls from "@/components/PlayerControls.vue";
+import ProgressBar from "@/components/ProgressBar.vue";
+
 let isPlaying = false;
 let playButtonLabel = ref('Play');
 let sounds: Howl[];
@@ -85,6 +90,11 @@ function prevSong() {
     index.value = 0;
   }
   playButtonAction();
+}
+
+function shuffleSongs() {
+}
+function loopSong() {
 }
 </script>
 
