@@ -9,7 +9,7 @@ export class SongData {
     album: Object
     filename: string
     identifier: string
-
+    howl: Howl
     constructor(json: {
         identifier: string,
         song_name: string,
@@ -22,13 +22,14 @@ export class SongData {
         this.album = json.album
         this.filename = json.filename;
         this.identifier = json.identifier;
+        this.howl = this.getHowl()
     }
 
     get URL(): string {
         return this.song_storage + "/" + this.filename;
     }
 
-    howl(): Howl {
+    getHowl(): Howl {
         return new Howl({
             src: this.URL.toString(),
             html5: true,
