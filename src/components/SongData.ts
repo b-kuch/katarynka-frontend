@@ -33,7 +33,7 @@ export class SongData {
         return new Howl({
             src: this.URL.toString(),
             html5: true,
-            preload: "metadata",
+            // preload: "metadata",
 
         })
     }

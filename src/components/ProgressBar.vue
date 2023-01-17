@@ -1,7 +1,7 @@
 <template>
  <div>
     <div class="progress-bar" @click="seek">
-      <div class="progress" ref="progress"  :style="{'width' : progress * 100 + '%'}"></div>
+      <div class="progress" ref="progress"  :style="{'width' : progress * 100 + '%'}"/>
     </div>
   </div>
 
@@ -27,7 +27,8 @@ function seek(e) {
       const progressEl = e.currentTarget;
       const x = e.clientX - progressEl.getBoundingClientRect().left;
       const percent = x / progressEl.clientWidth;
-      props.currentSound.seek(percent * props.currentSound.duration());
+      const newX = Math.round(percent * props.currentSound.duration());
+      props.currentSound.seek(newX);
     }
 
 </script>
