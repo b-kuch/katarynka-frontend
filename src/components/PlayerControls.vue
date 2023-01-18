@@ -1,17 +1,16 @@
 <template>
-  <div id="controls">
-    <button class="playerBtn fa fa-random" id="shuffle-songs"
+  <div class="controls">
+    <button class="playerBtn fa fa-random contrast outline" id="shuffle-songs"
             @click="emit('shuffleButton')"/>
-    <button class="playerBtn fa fa-arrow-left" id="prev-song"
+    <button class="playerBtn fa fa-arrow-left contrast outline" id="prev-song"
             @click="emit('previousButton')"/>
-    <button :class="'playerBtn fa ' + playButtonIconClass()" id="play-pause-song"
+    <button :class="'playerBtn fa  contrast outline ' + playButtonIconClass()" id="play-pause-song"
             @click="emit('togglePlayPauseButton')"/>
-    <button class="playerBtn fa fa-arrow-right" id="next-song"
+    <button class="playerBtn fa fa-arrow-right contrast outline" id="next-song"
             @click="emit('nextButton')"/>
-    <button class="playerBtn fa fa-circle" id="loop-song"
+    <button class="playerBtn fa fa-circle contrast outline" id="loop-song"
             @click="emit('loopButton')"/>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -33,5 +32,13 @@ function playButtonIconClass() {
 </script>
 
 <style scoped>
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
 
+.playerBtn:hover {
+  color: green;
+  border-color: green;
+}
 </style>

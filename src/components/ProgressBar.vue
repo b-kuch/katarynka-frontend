@@ -1,8 +1,9 @@
 <template>
- <div>
-    <div class="progress-bar" @click="seek">
-      <div class="progress" ref="progress"  :style="{'width' : progress * 100 + '%'}"/>
-    </div>
+  <div>
+    <form>
+      <input class="progress-bar" @input="seek"
+             type="range" min="0" :max="currentSound.duration()" id="range" v-model="progress" name="range">
+    </form>
   </div>
 
 </template>
@@ -11,41 +12,34 @@
 import {Howl} from "howler";
 import {ref} from "vue";
 
-const props = defineProps<{currentSound: Howl}>();
+const props = defineProps<{ currentSound: Howl}>();
 let progress = ref(0)
 
 props.currentSound.on('play', () => {
-        const interval = setInterval(() => {
-          progress.value = props.currentSound.seek() / props.currentSound.duration();
-        }, 1000);
-        props.currentSound.on('end', () => {
-          clearInterval(interval);
-        });
-      });
+  const interval = setInterval(() => {
+    progress.value = props.currentSound.seek() / props.currentSound.duration();
+  }, 1000);
+  props.currentSound.on('end', () => {
+    clearInterval(interval);
+  });
+});
 
-function seek(e) {
-      const progressEl = e.currentTarget;
-      const x = e.clientX - progressEl.getBoundingClientRect().left;
-      const percent = x / progressEl.clientWidth;
-      const newX = Math.round(percent * props.currentSound.duration());
-      props.currentSound.seek(newX);
+function seek(event) {
+  const progressEl = event.currentTarget;
+  const newX = progressEl.value;
+  try {
+    props.currentSound.seek(newX);
+    progress.value = newX;
+  } catch (e) {
+    if (e instanceof TypeError) {
+      console.log(x, percent, props.currentSound, newX)
+    } else {
+      throw e;
     }
+  }
+}
 
 </script>
 
 <style scoped>
-.progress-bar {
-  width: 50%;
-  height: 20px;
-  background-color: lightgray;
-  position: relative;
-}
-
-.progress {
-  height: 100%;
-  background-color: blue;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 </style>

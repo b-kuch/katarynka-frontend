@@ -1,21 +1,27 @@
 <template>
+  <main class="container-fluid">
+    <nav>
+
+  <VolumeControlBar
+      :volumeLevel="volumeLevel"
+      @changeVolume="(v) => Howler.volume(v/100)"/>
       <PlayerControls
-      @togglePlayPauseButton="playButtonAction"
-      @previousButton="prevSong"
-      @nextButton="nextSong"
-      @shuffleButton="shuffleSongs"
-      @loopButton="loopSong"
-      :sound="currentSound()"/>
-    <ProgressBar :currentSound="currentSound()"/>
-  <Song
-      v-for="(song, idx) in songs"
-      :key="song.identifier"
-      :song="song"
-      :index="idx"
-      :currentIndex="index"
-  />
-<!--  <VolumeControlBar-->
-<!--    :volumeLevel="volumeLevel"/>-->
+          @togglePlayPauseButton="playButtonAction"
+          @previousButton="prevSong"
+          @nextButton="nextSong"
+          @shuffleButton="shuffleSongs"
+          @loopButton="loopSong"
+          :sound="currentSound()"/>
+      <ProgressBar :currentSound="currentSound()"/>
+    </nav>
+    <Song
+        v-for="(song, idx) in songs"
+        :key="song.identifier"
+        :song="song"
+        :index="idx"
+        :currentIndex="index"
+    />
+  </main>
 </template>
 
 
@@ -26,31 +32,42 @@ import {SongData} from "@/components/SongData";
 import Song from "@/components/Song.vue";
 import PlayerControls from "@/components/PlayerControls.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
+import VolumeControlBar from "@/components/VolumeControlBar.vue";
 
 let song_details = new URL("", "http://localhost/songs")
 let trending_url = song_details + "/trending"
 let songs = await fetch_songs()
+
+function onSongEnd() {
+  nextSong();
+}
+
+function parseSongData(songsJSON: any[]) {
+  let songs = songsJSON.map(song => new SongData(song));
+  songs.forEach(song => {
+    song.howl.on("end", () => onSongEnd)
+  })
+  return songs;
+}
+
 async function fetch_songs() {
   return await fetch(trending_url)
       .then(response => response.json())
       .then(data => data.songs)
-      .then(data => data.map((json) => new SongData(json)))
-      .then(data => {return data})
+      .then(data => parseSongData(data))
+      .then(data => {
+        return data
+      })
       .catch((e) => console.log(e))
 }
 
 let index = ref(0);
-
-Howler.volume(0.1);
+let volumeLevel = 0.1
+Howler.volume(volumeLevel);
 
 function currentSound(): Howl {
   let s = songs[index.value];
-  console.log(s.howl);
-  // if (s !== undefined) {
-  //   return s.howl;
-  // }
-    return s.howl;
-  // return new Howl({src:"null"});
+  return s.howl;
 }
 
 function playButtonAction() {
@@ -58,7 +75,6 @@ function playButtonAction() {
 }
 
 function playSong(sound: Howl) {
-  console.log(sound.playing());
   if (sound.playing()) {
     sound.pause()
   } else {
@@ -100,20 +116,17 @@ function loopSong() {
 </script>
 
 <style>
-.playerBtn {
-  background: none;
-  border: none;
-  color: darkgreen;
-  width: 4em;
-}
+/*.playerBtn {*/
+/*  background: none;*/
+/*  border: none;*/
+/*  color: darkgreen;*/
+/*  width: 4em;*/
+/*}*/
 
-.playerBtn:hover {
-  color: green;
-}
 
-#controls {
-  width: 100%;
-  height: 8%;
-  background-color: #222222;
-}
+/*#controls {*/
+/*  width: 100%;*/
+/*  height: 8%;*/
+/*  background-color: #222222;*/
+/*}*/
 </style>

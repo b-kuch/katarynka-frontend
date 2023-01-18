@@ -1,14 +1,26 @@
 <template>
-<div class="volume-bar">
-  <div class="volume"  :style="{'width' : volume * 100 + '%'}"/>
-</div>
+  <div class="volume-bar">
+    <form>
+      <input type="range" min="0" :max="100" id="volume" name="volume" value="volumeLevel" @input="changeVolume">
+    </form>
+  </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import {ref} from "vue";
 
-const props = defineProps<{volumeLevel: number}>();
+const props = defineProps<{ volumeLevel: Number }>();
+const emit = defineEmits(["changeVolume"])
 
-let progress
+function changeVolume(event) {
+  const progressEl = event.currentTarget;
+  const newVolume = progressEl.value;
+
+  console.log(newVolume)
+  emit('changeVolume', newVolume);
+}
+
+// volume.value.on("change", () => )
 </script>
 
 <style scoped>

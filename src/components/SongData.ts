@@ -32,9 +32,7 @@ export class SongData {
     getHowl(): Howl {
         return new Howl({
             src: this.URL.toString(),
-            html5: true,
-            // preload: "metadata",
-
+            html5: true
         })
     }
 }
