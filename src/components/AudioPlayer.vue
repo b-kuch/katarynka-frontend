@@ -36,7 +36,7 @@ import VolumeControlBar from "@/components/VolumeControlBar.vue";
 
 let song_details = new URL("", "http://localhost/songs")
 let trending_url = song_details + "/trending"
-let songs = await fetch_songs()
+let songs : SongData[] = await fetch_songs()
 
 function onSongEnd() {
   nextSong();
