@@ -14,9 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import {Howl} from "howler";
 
-const props = defineProps<{ sound: Howl }>()
+const props = defineProps<{ isPlaying: boolean }>()
 const emit = defineEmits([
     "shuffleButton",
     "previousButton",
@@ -27,7 +26,7 @@ const emit = defineEmits([
 
 
 function playButtonIconClass() {
-  return props.sound.playing() ? 'fa-pause' : 'fa-play'
+  return props.isPlaying ? 'fa-pause' : 'fa-play'
 }
 </script>
 

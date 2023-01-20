@@ -2,23 +2,24 @@
   <main class="container-fluid">
     <nav>
 
-  <VolumeControlBar
-      :volumeLevel="volumeLevel"
-      @changeVolume="(v) => Howler.volume(v/100)"/>
+      <VolumeControlBar
+          :volumeLevel="volumeLevel"
+          @changeVolume="changeVolume"/>
       <PlayerControls
           @togglePlayPauseButton="playButtonAction"
           @previousButton="prevSong"
           @nextButton="nextSong"
           @shuffleButton="shuffleSongs"
           @loopButton="loopSong"
-          :sound="currentSound()"/>
-      <ProgressBar :currentSound="currentSound()"/>
+          :isPlaying="isPlaying"/>
+      <ProgressBar :progress="progress" :duration="currentSound().duration()" @seek="seekMoment"/>
     </nav>
     <Song
         v-for="(song, idx) in songs"
         :key="song.identifier"
         :song="song"
         :index="idx"
+        :selected="idx===index"
         :currentIndex="index"
     />
   </main>
@@ -36,7 +37,9 @@ import VolumeControlBar from "@/components/VolumeControlBar.vue";
 
 let song_details = new URL("", "http://localhost/songs")
 let trending_url = song_details + "/trending"
-let songs : SongData[] = await fetch_songs()
+let songs: SongData[] = await fetch_songs()
+let progress = 0;
+let isPlaying = false;
 
 function onSongEnd() {
   nextSong();
@@ -45,7 +48,17 @@ function onSongEnd() {
 function parseSongData(songsJSON: any[]) {
   let songs = songsJSON.map(song => new SongData(song));
   songs.forEach(song => {
-    song.howl.on("end", () => onSongEnd)
+    let howl = song.howl
+    howl.on("end", () => onSongEnd)
+
+    howl.on('play', () => {
+      const interval = setInterval(() => {
+        progress = howl.seek() / howl.duration();
+      }, 1000);
+      howl.on('end', () => {
+        clearInterval(interval);
+      });
+    });
   })
   return songs;
 }
@@ -63,7 +76,7 @@ async function fetch_songs() {
 
 let index = ref(0);
 let volumeLevel = 0.1
-Howler.volume(volumeLevel);
+// Howler.volume(volumeLevel);
 
 function currentSound(): Howl {
   let s = songs[index.value];
@@ -76,10 +89,16 @@ function playButtonAction() {
 
 function playSong(sound: Howl) {
   if (sound.playing()) {
-    sound.pause()
+    sound.pause();
+    isPlaying = false;
   } else {
     sound.play();
+    isPlaying = true;
   }
+}
+
+function changeVolume(v: number) {
+  Howler.volume(v / 100)
 }
 
 function nextSong() {
@@ -105,6 +124,11 @@ function prevSong() {
   index.value--;
   loopIndex()
   playButtonAction();
+}
+
+function seekMoment(moment: number) {
+  progress = moment;
+  currentSound().seek(currentSound().duration() * (moment / 100))
 }
 
 function shuffleSongs() {
