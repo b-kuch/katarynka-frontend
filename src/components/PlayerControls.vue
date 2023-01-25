@@ -1,27 +1,21 @@
 <template>
   <div class="controls">
-    <button class="playerBtn fa fa-random contrast outline" id="shuffle-songs"
-            @click="emit('shuffleButton')"/>
-    <button class="playerBtn fa fa-arrow-left contrast outline" id="prev-song"
+    <button class="playerBtn fa fa-arrow-left" id="prev-song"
             @click="emit('previousButton')"/>
-    <button :class="'playerBtn fa  contrast outline ' + playButtonIconClass()" id="play-pause-song"
+    <button :class="'playerBtn fa ' + playButtonIconClass()" id="play-pause-song"
             @click="emit('togglePlayPauseButton')"/>
-    <button class="playerBtn fa fa-arrow-right contrast outline" id="next-song"
+    <button class="playerBtn fa fa-arrow-right" id="next-song"
             @click="emit('nextButton')"/>
-    <button class="playerBtn fa fa-circle contrast outline" id="loop-song"
-            @click="emit('loopButton')"/>
-  </div>
+ </div>
 </template>
 
 <script setup lang="ts">
 
 const props = defineProps<{ isPlaying: boolean }>()
 const emit = defineEmits([
-    "shuffleButton",
     "previousButton",
     "togglePlayPauseButton",
     "nextButton",
-    "loopButton",
 ]);
 
 

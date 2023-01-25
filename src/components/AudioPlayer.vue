@@ -15,14 +15,16 @@
         src="@/assets/cover.png"
         alt="">
     <div class="player">
-      <ProgressBar class="progress" :progress="progress" :duration="currentSound().duration()" @seek="seekMoment"/>
+      <ProgressBar
+          class="progress"
+          :progress="progress"
+          :duration="currentSound.duration()"
+          @seek="seekMoment"/>
       <PlayerControls
           class="controls"
           @togglePlayPauseButton="playButtonAction"
           @previousButton="prevSong"
           @nextButton="nextSong"
-          @shuffleButton="shuffleSongs"
-          @loopButton="loopSong"
           :isPlaying="isPlaying"/>
       <VolumeControlBar
           class="volume"
@@ -46,29 +48,18 @@ import VolumeControlBar from "@/components/VolumeControlBar.vue";
 let song_details = new URL("", "http://localhost/songs")
 let trending_url = song_details + "/trending"
 let songs: SongData[] = await fetch_songs()
-let progress = 0;
-let isPlaying = false;
+let progress = ref(0);
+let isPlaying = ref(false);
+let index = ref(0);
+let volumeLevel = 0.1;
+let currentSound = ref(songs[index.value].howl);
 
 function onSongEnd() {
   nextSong();
 }
 
 function parseSongData(songsJSON: any[]) {
-  let songs = songsJSON.map(song => new SongData(song));
-  songs.forEach(song => {
-    let howl = song.howl
-    howl.on("end", () => onSongEnd)
-
-    howl.on('play', () => {
-      const interval = setInterval(() => {
-        progress = howl.seek() / howl.duration();
-      }, 1000);
-      howl.on('end', () => {
-        clearInterval(interval);
-      });
-    });
-  })
-  return songs;
+  return songsJSON.map(song => new SongData(song));
 }
 
 async function fetch_songs(): Promise<SongData[]> {
@@ -81,27 +72,31 @@ async function fetch_songs(): Promise<SongData[]> {
       })
 }
 
-let index = ref(0);
-let volumeLevel = 0.1;
 
 Howler.volume(volumeLevel);
 
-function currentSound(): Howl {
-  let s = songs[index.value];
-  return s.howl;
-}
-
 function playButtonAction() {
-  playSong(currentSound());
+  playSong(currentSound.value);
 }
 
 function playSong(sound: Howl) {
   if (sound.playing()) {
     sound.pause();
-    isPlaying = false;
+    isPlaying.value = false;
   } else {
     sound.play();
-    isPlaying = true;
+    isPlaying.value = true;
+
+    sound.on('play', () => {
+      const interval = setInterval(() => {
+        progress.value = 100 * sound.seek() / sound.duration();
+      }, 1000);
+      sound.on('pause', () => {
+        clearInterval(interval);
+      });
+    });
+    sound.on("end", () => onSongEnd)
+
   }
 }
 
@@ -112,13 +107,15 @@ function changeVolume(v: number) {
 function nextSong() {
   rewindCurrent();
   index.value++;
+  currentSound.value = songs[index.value].howl;
   loopIndex();
-  playSong(currentSound());
+  playSong(currentSound.value);
 }
 
 function rewindCurrent() {
-  currentSound().pause();
-  currentSound().seek(0);
+  currentSound.value.pause();
+  currentSound.value.seek(0);
+  progress.value = 0;
 }
 
 function loopIndex() {
@@ -130,27 +127,19 @@ function loopIndex() {
 function prevSong() {
   rewindCurrent();
   index.value--;
+  currentSound.value = songs[index.value].howl;
   loopIndex()
   playButtonAction();
 }
 
 function seekMoment(moment: number) {
-  progress = moment;
-  currentSound().seek(currentSound().duration() * (moment / 100))
-}
-
-function shuffleSongs() {
-}
-
-function loopSong() {
+  let sound = currentSound.value;
+  // progress.value = moment.valueOf();d
+  sound.seek(sound.duration() * (moment / 100))
 }
 
 </script>
 
-
-<style>
-
-</style>
 <style scoped>
 main.container {
   width: 95vw;
@@ -175,7 +164,6 @@ main.container {
 }
 
 .player {
-  border: #181818 1px solid;
   grid-area: player;
   display: grid;
   grid-template:

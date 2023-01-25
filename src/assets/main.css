@@ -1,7 +1,6 @@
 @import './base.css';
 
 
-
 #app {
   margin: 0;
   padding: 1em;
@@ -24,40 +23,6 @@ a,
   }
 }
 
-/*@media (min-width: 1024px) {*/
-/*  body {*/
-/*    display: flex;*/
-/*    place-items: center;*/
-/*  }*/
-
-/*  #app {*/
-/*    display: grid;*/
-/*    grid-template-columns: 1fr 1fr;*/
-/*    padding: 0;*/
-/*  }*/
-/*}*/
-
-
-/*root {*/
-/*  --green-hue: 200;*/
-/*  --green-90: hsl(var(--green-hue), 100%, 70%);*/
-/*  --green-80: hsl(var(--green-hue), 100%, 70%);*/
-/*  --green-70: hsl(var(--green-hue), 100%, 70%);*/
-/*  --green-60: hsl(var(--green-hue), 100%, 60%);*/
-/*  --green-50: hsl(var(--green-hue), 100%, 50%);*/
-/*  --green-40: hsl(var(--green-hue), 100%, 40%);*/
-/*  --green-30: hsl(var(--green-hue), 100%, 30%);*/
-/*  --green-20: hsl(var(--green-hue), 100%, 20%);*/
-/*  --green-15: hsl(var(--green-hue), 100%, 15%);*/
-/*  --green-10: hsl(var(--green-hue), 100%, 10%);*/
-
-
-/*  --content-background-color: var(--green-10);*/
-/*  --background-color: var(--green-20);*/
-/*  --main-color: var(--green-40);*/
-/*  --accent-color: var(--green-80);*/
-/*}*/
-
 body {
   margin: 0;
   padding: 0;
@@ -65,7 +30,3 @@ body {
   height: 100vh;
   width: 100vw;
 }
-
-/*html, body {*/
-/*  background-color: var(--background-color);*/
-/*}*/
