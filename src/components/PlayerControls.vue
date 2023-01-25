@@ -34,8 +34,15 @@ function playButtonIconClass() {
 .controls {
   display: flex;
   justify-content: space-between;
+  /*align-content: flex-start;*/
+  width: 30vw;
 }
-
+.playerBtn {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  width: 4em;
+}
 .playerBtn:hover {
   color: green;
   border-color: green;

@@ -1,12 +1,12 @@
 <template>
   <article>
     <div v-if="currentIndex === index || null ">
-      <a>
+      <a class="highlight">
         {{ song.song_name }} - {{ song.artist.name }}
       </a>
     </div>
     <div v-else>
-      <a class="secondary">
+      <a>
         {{ song.song_name }} - {{ song.artist.name }}
       </a>
     </div>
@@ -20,4 +20,7 @@ const props = defineProps<{ song: SongData, index: number, currentIndex: number 
 </script>
 
 <style scoped>
+.highlight {
+  color: var(--color-heading);
+}
 </style>

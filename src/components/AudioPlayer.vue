@@ -1,27 +1,35 @@
 <template>
-  <main class="container-fluid">
-    <nav>
-
-      <VolumeControlBar
-          :volumeLevel="volumeLevel"
-          @changeVolume="changeVolume"/>
+  <main class="container">
+    <div class="songs">
+      <Song
+          v-for="(song, idx) in songs"
+          :key="song.identifier"
+          :song="song"
+          :index="idx"
+          :selected="idx===index"
+          :currentIndex="index"
+      />
+    </div>
+    <img
+        class="cover"
+        src="@/assets/cover.png"
+        alt="">
+    <div class="player">
+      <ProgressBar class="progress" :progress="progress" :duration="currentSound().duration()" @seek="seekMoment"/>
       <PlayerControls
+          class="controls"
           @togglePlayPauseButton="playButtonAction"
           @previousButton="prevSong"
           @nextButton="nextSong"
           @shuffleButton="shuffleSongs"
           @loopButton="loopSong"
           :isPlaying="isPlaying"/>
-      <ProgressBar :progress="progress" :duration="currentSound().duration()" @seek="seekMoment"/>
-    </nav>
-    <Song
-        v-for="(song, idx) in songs"
-        :key="song.identifier"
-        :song="song"
-        :index="idx"
-        :selected="idx===index"
-        :currentIndex="index"
-    />
+      <VolumeControlBar
+          class="volume"
+          :volumeLevel="volumeLevel"
+          @changeVolume="changeVolume"/>
+    </div>
+
   </main>
 </template>
 
@@ -63,19 +71,19 @@ function parseSongData(songsJSON: any[]) {
   return songs;
 }
 
-async function fetch_songs() {
-  return await fetch(trending_url)
+async function fetch_songs(): Promise<SongData[]> {
+  return fetch(trending_url)
       .then(response => response.json())
       .then(data => data.songs)
       .then(data => parseSongData(data))
       .then(data => {
         return data
       })
-      .catch((e) => console.log(e))
 }
 
 let index = ref(0);
 let volumeLevel = 0.1
+
 // Howler.volume(volumeLevel);
 
 function currentSound(): Howl {
@@ -139,18 +147,59 @@ function loopSong() {
 
 </script>
 
+
 <style>
-/*.playerBtn {*/
-/*  background: none;*/
-/*  border: none;*/
-/*  color: darkgreen;*/
-/*  width: 4em;*/
-/*}*/
 
+</style>
+<style scoped>
+main.container {
+  width: 95vw;
+  height: 95vh;
+  display: grid;
+  grid-template:
+          "songs cover" 1fr
+          "player player" 10%
+          /20% 1fr;
+  justify-items: center;
+  align-items: center;
+}
 
-/*#controls {*/
-/*  width: 100%;*/
-/*  height: 8%;*/
-/*  background-color: #222222;*/
-/*}*/
+.songs {
+  margin-bottom: auto;
+  grid-area: songs;
+}
+
+.cover {
+  grid-area: cover;
+  height: 75vh;
+}
+
+.player {
+  border: #181818 1px solid;
+  grid-area: player;
+  display: grid;
+  grid-template:
+              "controls volume" 1fr
+              "progress volume" 1fr
+              /8fr 2fr;
+  background-color: var(--color-background-soft);
+  border-radius: 1em 1em 0 0;
+  height: 15vh;
+
+  justify-items: center;
+  align-items: center;
+}
+
+.controls {
+  grid-area: controls;
+}
+
+.progress {
+  grid-area: progress;
+}
+
+.volume {
+  grid-area: volume;
+}
+
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <div class="volume-bar">
+  <div>
     <form>
-      <input type="range" min="0" :max="100" id="volume" name="volume" v-model="volumeLevel" @input="changeVolume">
+      <input class="volume-bar" type="range" min="0" :max="100" id="volume" name="volume" v-model="volumeLevel" @input="changeVolume">
     </form>
   </div>
 </template>
@@ -20,5 +20,7 @@ function changeVolume(event) {
 </script>
 
 <style scoped>
-
+.volume-bar {
+  width: 8vw;
+}
 </style>

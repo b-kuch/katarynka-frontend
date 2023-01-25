@@ -1,4 +1,5 @@
 <template>
+  <div class="progress-bar">
       <label for="progress">{{ formatSeconds(progress*duration*0.01) }}</label>
       <input
           v-model.number="progress"
@@ -11,7 +12,7 @@
           name="progress"
       />
       <label for="progress">{{ formatSeconds(duration) }}</label>
-
+</div>
 </template>
 
 <script setup lang="ts">
@@ -30,4 +31,12 @@ function formatSeconds(seconds: number) {
 </script>
 
 <style scoped>
+
+.progress-bar {
+  display: flex;
+  flex-direction: row;
+  width: 60vw;
+  margin-left: 1em;
+  margin-right: 1em;
+}
 </style>
