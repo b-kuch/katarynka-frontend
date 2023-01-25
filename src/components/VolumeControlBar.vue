@@ -10,7 +10,6 @@
 
 const props = defineProps<{ volumeLevel: Number }>();
 const emit = defineEmits(["changeVolume"])
-let volumeLevel = props.volumeLevel;
 
 function changeVolume(event) {
   const newVolume = event.currentTarget.value;

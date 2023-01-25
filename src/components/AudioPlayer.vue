@@ -26,7 +26,7 @@
           :isPlaying="isPlaying"/>
       <VolumeControlBar
           class="volume"
-          :volumeLevel="volumeLevel"
+          :volumeLevel="volumeLevel*100"
           @changeVolume="changeVolume"/>
     </div>
 
@@ -82,9 +82,9 @@ async function fetch_songs(): Promise<SongData[]> {
 }
 
 let index = ref(0);
-let volumeLevel = 0.1
+let volumeLevel = 0.1;
 
-// Howler.volume(volumeLevel);
+Howler.volume(volumeLevel);
 
 function currentSound(): Howl {
   let s = songs[index.value];
