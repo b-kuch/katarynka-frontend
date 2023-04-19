@@ -9,7 +9,8 @@ export class SongData {
     album: Object
     filename: string
     identifier: string
-    howl: Howl
+    howl: Howl | null
+
     constructor(json: {
         identifier: string,
         song_name: string,
@@ -22,7 +23,7 @@ export class SongData {
         this.album = json.album
         this.filename = json.filename;
         this.identifier = json.identifier;
-        this.howl = this.getHowl()
+        this.howl = null
     }
 
     get URL(): string {
@@ -30,10 +31,14 @@ export class SongData {
     }
 
     getHowl(): Howl {
-        return new Howl({
-            src: this.URL.toString(),
-            html5: true,
-            autoplay: false
-        })
+        if (this.howl == null) {
+            this.howl = new Howl({
+                src: this.URL.toString(),
+                html5: true,
+                autoplay: false
+            })
+        }
+
+        return this.howl
     }
 }

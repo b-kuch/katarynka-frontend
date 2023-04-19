@@ -52,7 +52,7 @@ let progress = ref(0);
 let isPlaying = ref(false);
 let index = ref(0);
 let volumeLevel = 0.1;
-let currentSound = ref(songs[index.value].howl);
+let currentSound = ref(songs[index.value].getHowl());
 
 function onSongEnd() {
   nextSong();
@@ -107,14 +107,14 @@ function changeVolume(v: number) {
 function nextSong() {
   rewindCurrent();
   index.value++;
-  currentSound.value = songs[index.value].howl;
+  currentSound.value = songs[index.value].getHowl();
   loopIndex();
   playSong(currentSound.value);
 }
 
 function rewindCurrent() {
   currentSound.value.pause();
-  currentSound.value.seek(0);
+  // currentSound.value.seek(0);
   progress.value = 0;
 }
 
@@ -127,7 +127,7 @@ function loopIndex() {
 function prevSong() {
   rewindCurrent();
   index.value--;
-  currentSound.value = songs[index.value].howl;
+  currentSound.value = songs[index.value].getHowl();
   loopIndex()
   playButtonAction();
 }
