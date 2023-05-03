@@ -80,6 +80,12 @@ function playButtonAction() {
 }
 
 function playSong(sound: Howl) {
+  function getSongInterval() {
+    return setInterval(() => {
+      progress.value = 100 * sound.seek() / sound.duration();
+    }, 1000);
+  }
+
   if (sound.playing()) {
     sound.pause();
     isPlaying.value = false;
@@ -88,12 +94,21 @@ function playSong(sound: Howl) {
     isPlaying.value = true;
 
     sound.on('play', () => {
-      const interval = setInterval(() => {
-        progress.value = 100 * sound.seek() / sound.duration();
-      }, 1000);
+      let interval = getSongInterval();
+      console.log("createdInterval");
       sound.on('pause', () => {
         clearInterval(interval);
+        console.log("interval onpause");
       });
+      // sound.on('end', () => {
+      //   clearInterval(interval);
+      //   console.log("clearedInterval");
+      // });
+      sound.on('seek', () => {
+        clearInterval(interval);
+        console.log("interval onseek");
+        interval = getSongInterval()
+      })
     });
     sound.on("end", () => onSongEnd)
 
@@ -107,8 +122,8 @@ function changeVolume(v: number) {
 function nextSong() {
   rewindCurrent();
   index.value++;
-  currentSound.value = songs[index.value].getHowl();
   loopIndex();
+  currentSound.value = songs[index.value].getHowl();
   playSong(currentSound.value);
 }
 
@@ -134,7 +149,10 @@ function prevSong() {
 
 function seekMoment(moment: number) {
   let sound = currentSound.value;
-  // progress.value = moment.valueOf();d
+  console.log("Seeked value:", moment, "%")
+  console.log("Full duration :", sound.duration())
+  console.log("Current:", sound.duration() * (moment / 100))
+
   sound.seek(sound.duration() * (moment / 100))
 }
 
